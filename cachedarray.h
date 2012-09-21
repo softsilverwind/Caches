@@ -183,8 +183,8 @@ inline void Cache::write(unsigned pos)
 
 void Cache::printStats()
 {
-	printf("%d/%d = %f\n", hits, total, (double) hits / total);
-	printf("%d/%d = %f\n", misses, total, (double) misses / total);
+	printf("Hits: %d/%d = %f\n", hits, total, (double) hits / total);
+	printf("Misses: %d/%d = %f\n", misses, total, (double) misses / total);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -194,6 +194,7 @@ class CachedNum
 	private:
 		static Cache *cache;
 		static unsigned length;
+
 		unsigned mempos;
 
 
@@ -350,6 +351,8 @@ inline void CachedNum::setCache(Cache *cache)
 
 /* ------------------------------------------------------------------------- */
 
+static unsigned maxnum = 0;
+
 class CachedArray
 {
 	private:
@@ -357,7 +360,7 @@ class CachedArray
 		CachedNum** contents;
 	public:
 		CachedNum operator() (unsigned pos);
-		CachedArray(unsigned length, unsigned membegin);
+		CachedArray(unsigned length, unsigned membegin = 0);
 		~CachedArray();
 };
 
@@ -366,8 +369,13 @@ inline CachedArray::CachedArray(unsigned length, unsigned membegin)
 {
 	contents = new CachedNum* [length];
 
+	if (membegin == 0)
+		membegin = maxnum;
+
 	for (unsigned i = 0; i < length; ++i)
 		contents[i] = new CachedNum(membegin + CachedNum::getLength() * i);
+
+	maxnum += membegin + CachedNum::getLength() * length;
 }
 
 inline CachedNum CachedArray::operator() (unsigned pos)
@@ -399,7 +407,7 @@ class CachedArray2
 
 	public:
 		CachedNum operator() (unsigned rowpos, unsigned columnpos);
-		CachedArray2(unsigned rowlength, unsigned columnlength, unsigned membegin);
+		CachedArray2(unsigned rowlength, unsigned columnlength, unsigned membegin = 0);
 		~CachedArray2();
 };
 
@@ -408,8 +416,13 @@ inline CachedArray2::CachedArray2(unsigned rowlength, unsigned columnlength, uns
 {
 	contents = new CachedNum *[rowlength * columnlength];
 
+	if (membegin == 0)
+		membegin = maxnum;
+
 	for (unsigned i = 0; i < rowlength * columnlength; ++i)
 		contents[i] = new CachedNum(membegin + CachedNum::getLength() * i);
+
+	maxnum += membegin + CachedNum::getLength() * rowlength * columnlength;
 }
 
 inline CachedNum CachedArray2::operator() (unsigned rowpos, unsigned columnpos)
