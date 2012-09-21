@@ -65,9 +65,15 @@ class Cache
 		void printStats();
 };
 
+#ifdef __unix__
 const char* const Cache::Green = "\033[1;32m";
 const char* const Cache::Red = "\033[1;31m";
 const char* const Cache::White = "\033[0;0m";
+#else
+const char* const Cache::Green = "H";
+const char* const Cache::Red = "M";
+const char* const Cache::White = "";
+#endif
 
 inline int clog2(unsigned num)
 {
