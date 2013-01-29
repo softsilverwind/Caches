@@ -381,7 +381,7 @@ inline CachedArray::CachedArray(unsigned length, unsigned membegin)
 	for (unsigned i = 0; i < length; ++i)
 		contents[i] = new CachedNum(membegin + CachedNum::getLength() * i);
 
-	maxnum += membegin + CachedNum::getLength() * length;
+	maxnum = membegin + CachedNum::getLength() * length;
 }
 
 inline CachedNum CachedArray::operator() (unsigned pos)
@@ -428,7 +428,7 @@ inline CachedArray2::CachedArray2(unsigned rowlength, unsigned columnlength, uns
 	for (unsigned i = 0; i < rowlength * columnlength; ++i)
 		contents[i] = new CachedNum(membegin + CachedNum::getLength() * i);
 
-	maxnum += membegin + CachedNum::getLength() * rowlength * columnlength;
+	maxnum = membegin + CachedNum::getLength() * rowlength * columnlength;
 }
 
 inline CachedNum CachedArray2::operator() (unsigned rowpos, unsigned columnpos)
