@@ -65,7 +65,7 @@ class Cache
 		void printStats();
 };
 
-#ifdef __unix__
+#if defined(__unix__) || defined(__APPLE__)
 const char* const Cache::Green = "\033[1;32m";
 const char* const Cache::Red = "\033[1;31m";
 const char* const Cache::White = "\033[0;0m";
@@ -147,10 +147,10 @@ inline Cache::Cache(unsigned size, unsigned associativity,
 	blockmask = (1 << blockbits) - 1;
 
 	indexbits = clog2(size / blocksize / assoc);
-	indexmask = (1 << indexbits) - 1 << blockbits;
+	indexmask = ((1 << indexbits) - 1) << blockbits;
 
 	tagbits = 32 - blockbits - indexbits;
-	tagmask = (1 << tagbits) - 1 << indexbits << blockbits;
+	tagmask = ((1 << tagbits) - 1) << indexbits << blockbits;
 
 	data = new Block *[size / blocksize / assoc];
 
